@@ -2,8 +2,9 @@
 '''
 import numpy as np
 import matplotlib.pyplot as plt
-#import scipy.sparse as sps
-#from scipy.sparse.linalg import eigs
+import scipy as sp
+import scipy.sparse as sps
+from scipy.sparse.linalg import eigs
 
 
 def guided_modes_1DTE(prm, k0, h):
@@ -29,19 +30,23 @@ def guided_modes_1DTE(prm, k0, h):
         Field distributions of the guided eigenmodes
     """
     dt = np.common_type(np.array([prm]))
+    # Construct the matrix M and B for the gernerlized eigenvalue problem
     M  = np.zeros((len(prm),len(prm)), dtype = dt)
     for i in range(len(prm)):
-        M[i][i] =  -2/(h**2)+k0**2 * prm[i] 
+        M[i][i] =  -2/(h**2)+k0**2 * prm[i]
         if i > 0:
             M[i][i-1] = 1/(h**2) 
         if i < len(prm) - 1:
             M[i][i+1] = 1/(h**2)
+    M[0,0] = M[-1,-1] = 1
     M  = (1/(k0**2)) * M
-    eff_eps, guided = np.linalg.eig(M)
+    B = np.eye(len(prm))
+    B[0,0] = B[-1,-1] = 0
+    eff_eps, guided = sp.linalg.eig(M, B)
     return eff_eps, guided
 
 # Define the parameters
-grid_size     = 15
+grid_size     = 120
 number_points = 601
 h             = grid_size/(number_points - 1)
 lam           = 0.78
@@ -62,8 +67,8 @@ indices = np.where((eff_eps >= e_substrate) & (eff_eps <= e_substrate + delta_e)
 ## Extract the eigenvalues and eigenvectors within the range
 selected_eff_eps = eff_eps[indices]
 selected_guided = guided[indices]
-print('selected_eff_eps: ', selected_eff_eps)
-print('selected_guided: ', selected_guided)
+print('selected_eff_eps: ', selected_eff_eps[0])
+print('selected_guided: ', selected_guided[0])
 
 # Plot the eigenvalues and eigenvectors
 x = xx
