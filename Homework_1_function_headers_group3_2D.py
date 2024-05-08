@@ -39,6 +39,7 @@ def guided_modes_1DTE(prm, k0, h):
         if i < len(prm) - 1:
             M[i][i+1] = 1/(h**2)
     M[0,0] = M[-1,-1] = 1
+    M[0,1] = M[-1,-2] = 0
     M  = (1/(k0**2)) * M
     B = np.eye(len(prm))
     B[0,0] = B[-1,-1] = 0
@@ -67,12 +68,12 @@ indices = np.where((eff_eps >= e_substrate) & (eff_eps <= e_substrate + delta_e)
 ## Extract the eigenvalues and eigenvectors within the range
 selected_eff_eps = eff_eps[indices]
 selected_guided = guided[indices]
-print('selected_eff_eps: ', selected_eff_eps[0])
-print('selected_guided: ', selected_guided[0])
+print('selected_eff_eps: ', selected_eff_eps[5])
+print('selected_guided: ', selected_guided[5])
 
 # Plot the eigenvalues and eigenvectors
 x = xx
-y = selected_guided[0]
+y = selected_guided[5]
 plt.plot(x, y)
 plt.xlabel('Position [µm]')
 plt.ylabel('Electric field')
