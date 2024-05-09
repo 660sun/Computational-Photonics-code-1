@@ -26,7 +26,6 @@ def guided_modes_1DTE(prm, k0, h):
         Field distributions of the guided eigenmodes
     """
     dt = np.common_type(np.array([prm]))
-    # Construct the matrix M and B for the gernerlized eigenvalue problem
     M  = np.zeros((len(prm),len(prm)), dtype = dt)
     for i in range(len(prm)):
         M[i][i] =  -2/(h**2) + (k0**2) * prm[i]
@@ -35,13 +34,6 @@ def guided_modes_1DTE(prm, k0, h):
         if i < len(prm) - 1:
             M[i][i+1] = 1/(h**2)
     M  = (1/(k0**2)) * M
-    # M[0,0] = M[-1,-1] = 1
-    # M[0,1] = M[-1,-2] = 0
-    # B = np.eye(len(prm))
-    # B[0,0] = B[-1,-1] = 0
-    # eff_eps, guided = sp.linalg.eig(M, B)
-    # print(M)
-    # print(B)
     eff_eps, guided = np.linalg.eig(M)
     return eff_eps, guided
 
