@@ -2,10 +2,6 @@
 '''
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy as sp
-import scipy.sparse as sps
-from scipy.sparse.linalg import eigs
-
 
 def guided_modes_1DTE(prm, k0, h):
     """Computes the effective permittivity of a TE polarized guided eigenmode.
@@ -71,15 +67,15 @@ indices = np.where((eff_eps >= e_substrate) & (eff_eps <= e_substrate + delta_e)
 ## Extract the eigenvalues and eigenvectors within the range
 selected_eff_eps = eff_eps[indices]
 selected_guided = (np.transpose(guided))[indices]
-print('selected_eff_eps: ', selected_eff_eps)
-print('selected_guided: ', selected_guided)
- 
+mode_ind = int(1)
+print('selected_eff_eps: ', selected_eff_eps[mode_ind])
+print('selected_guided: ', selected_guided[mode_ind])
 
 # Plot the eigenvalues and eigenvectors
 x = xx
-y = selected_guided[0]
+y = selected_guided[mode_ind]
 plt.plot(x, y)
 plt.xlabel('Position [µm]')
-plt.ylabel('Electric field')
-plt.title('Guided mode field distribution')
+plt.ylabel('Electric field strength [V/µm]')
+plt.title('Guided mode field distribution \n effective permittivity = ' + str(selected_eff_eps[mode_ind]))
 plt.show()
