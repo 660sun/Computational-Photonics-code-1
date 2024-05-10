@@ -1,5 +1,9 @@
 '''Homework 1, Computational Photonics, SS 2024:  FD mode solver. 1+1=2D
 '''
+from datetime import timedelta
+import time
+start_time = time.perf_counter()
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -59,6 +63,14 @@ indices = np.where((eff_eps >= e_substrate) & (eff_eps <= e_substrate + delta_e)
 ## Extract the eigenvalues and eigenvectors within the range
 selected_eff_eps = eff_eps[indices]
 selected_guided = (np.transpose(guided))[indices]
+# mode_ind = int(1)
+# print('selected_eff_eps: ', selected_eff_eps[mode_ind])
+# print('selected_guided: ', selected_guided[mode_ind])
+
+# Calculate the operational time of the program (finding the eigenvalues and eigenvectors)
+end_time=time.perf_counter()
+print('The operational time of the program is %s seconds' %(end_time-start_time))
+
 mode_ind = int(1)
 print('selected_eff_eps: ', selected_eff_eps[mode_ind])
 print('selected_guided: ', selected_guided[mode_ind])
