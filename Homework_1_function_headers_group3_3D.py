@@ -102,6 +102,7 @@ numb          = 2
 eff_eps, guided = guided_modes_2D(prm, k0, h, numb)
 # print(eff_eps)
 # print(guided)
+
 # Calculate the operational time of the program (finding the eigenvalues and eigenvectors)
 end_time=time.perf_counter()
 print('The operational time of the program is %s seconds' %(end_time-start_time))
@@ -110,17 +111,14 @@ mod_ind = 0
 print(eff_eps)
 print(guided)
 
+# Plot the eigenmode
 X, Y = XX, YY
 Z = np.real(np.transpose(guided)[mod_ind].reshape((number_points, number_points)))
-
-# Plot the eigenmode
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-
-# Customize the z axis.
+## Customize the z axis.
 ax.set_zlim(np.min(Z), np.max(Z))
 ax.zaxis.set_major_locator(LinearLocator(10))
-
-# Add a color bar which maps values to colors.
+## Add a color bar which maps values to colors.
 fig.colorbar(surf, shrink=0.5, aspect=5)
 plt.show()
