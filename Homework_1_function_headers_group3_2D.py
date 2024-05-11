@@ -98,3 +98,6 @@ ax2.tick_params(axis='y', labelcolor=color)
 fig.tight_layout()
 plt.title('Guided mode field distribution \n effective permittivity = ' + str(selected_eff_eps[mode_ind]))
 plt.show()
+
+# Change the grid size and number of points to see the error in the eigenvalues and eigenvectors
+
