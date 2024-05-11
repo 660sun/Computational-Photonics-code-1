@@ -85,21 +85,22 @@ def guided_modes_2D(prm, k0, h, numb):
 
 # Define the parameters
 grid_size     = 120
-number_points = 301
+number_points = 201
 h             = grid_size/(number_points - 1)
 lam           = 0.78
 k0            = 2*np.pi/lam
 e_substrate   = 2.25
 delta_e       = 1.5e-2
 w             = 15.0
-xx            = np.linspace(-grid_size/2,grid_size/2,number_points)
+xx            = np.linspace(-grid_size/2 - h,grid_size/2 + h,number_points + 2)
 yy            = np.linspace(-grid_size/2,grid_size/2,number_points)
 XX,YY         = np.meshgrid(xx,yy)
 prm           = e_substrate + delta_e * np.exp(-(XX**2+YY**2)/w**2)
-numb          = 2
+numb          = 60
 
 # Compute the eigenvalues and eigenvectors
 eff_eps, guided = guided_modes_2D(prm, k0, h, numb)
+guided = np.transpose(guided)
 # print(eff_eps)
 # print(guided)
 
@@ -107,18 +108,22 @@ eff_eps, guided = guided_modes_2D(prm, k0, h, numb)
 end_time=time.perf_counter()
 print('The operational time of the program is %s seconds' %(end_time-start_time))
 
-mod_ind = 0
+mode_ind = 9
 print(eff_eps)
-print(guided)
+# print(guided)
 
 # Plot the eigenmode
 X, Y = XX, YY
-Z = np.real(np.transpose(guided)[mod_ind].reshape((number_points, number_points)))
+Z = np.real(guided[mode_ind].reshape((number_points , number_points + 2)))
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 ## Customize the z axis.
 ax.set_zlim(np.min(Z), np.max(Z))
 ax.zaxis.set_major_locator(LinearLocator(10))
+ax.set_title('Guided mode field distribution \n effective permittivity = ' + str(eff_eps[mode_ind]))
+ax.set_xlabel('x/µm')
+ax.set_ylabel('y/µm')
+ax.set_zlabel('Electric field strength [V/µm]')
 ## Add a color bar which maps values to colors.
 fig.colorbar(surf, shrink=0.5, aspect=5)
 plt.show()
