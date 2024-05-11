@@ -77,9 +77,24 @@ print('selected_guided: ', selected_guided[mode_ind])
 
 # Plot the eigenvalues and eigenvectors
 x = xx
-y = selected_guided[mode_ind]
-plt.plot(x, y)
-plt.xlabel('Position [µm]')
-plt.ylabel('Electric field strength [V/µm]')
+y1 = selected_guided[mode_ind]
+y2 = prm
+
+fig, ax1 = plt.subplots(figsize=(8, 3))
+
+color = 'tab:blue'
+ax1.set_xlabel('Position [µm]')
+ax1.set_ylabel('Electric field strength [V/µm]', color=color)
+ax1.plot(x, y1, color=color)
+ax1.tick_params(axis='y', labelcolor=color)
+
+ax2 = ax1.twinx()
+
+color = 'tab:red'
+ax2.set_ylabel('Dielectric permittivity', color=color)
+ax2.plot(x, y2, color=color)
+ax2.tick_params(axis='y', labelcolor=color)
+
+fig.tight_layout()
 plt.title('Guided mode field distribution \n effective permittivity = ' + str(selected_eff_eps[mode_ind]))
 plt.show()

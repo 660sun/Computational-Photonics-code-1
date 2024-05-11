@@ -10,6 +10,7 @@ from scipy.sparse.linalg import eigs
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
+from matplotlib.ticker import FormatStrFormatter
 
 # def matrix_gen(n):
 #     # Caclulates NxN matrix where N = n**2
@@ -77,10 +78,6 @@ def guided_modes_2D(prm, k0, h, numb):
     M = (1/(k0**2)) * M
     # Compute the eigenvalues and eigenvectors
     eff_eps, guided = sps.linalg.eigs(M, k = numb, which = 'LR')
-    min_val = prm.min()
-    max_val = prm.max()
-    # while abs(eff_eps[0]) < min_val or abs(eff_eps[0]) > max_val:
-    #     eff_eps, guided = eigs(M, k=1, which='LR')
     return eff_eps, guided
 
 # Define the parameters
@@ -96,7 +93,7 @@ xx            = np.linspace(-grid_size/2 - h,grid_size/2 + h,number_points + 2)
 yy            = np.linspace(-grid_size/2,grid_size/2,number_points)
 XX,YY         = np.meshgrid(xx,yy)
 prm           = e_substrate + delta_e * np.exp(-(XX**2+YY**2)/w**2)
-numb          = 60
+numb          = 1
 
 # Compute the eigenvalues and eigenvectors
 eff_eps, guided = guided_modes_2D(prm, k0, h, numb)
@@ -108,22 +105,35 @@ guided = np.transpose(guided)
 end_time=time.perf_counter()
 print('The operational time of the program is %s seconds' %(end_time-start_time))
 
-mode_ind = 9
+mode_ind = 0
 print(eff_eps)
 # print(guided)
 
-# Plot the eigenmode
+# Plot the eigenmode(3d plot)
 X, Y = XX, YY
 Z = np.real(guided[mode_ind].reshape((number_points , number_points + 2)))
-fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(8,6))
 surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 ## Customize the z axis.
 ax.set_zlim(np.min(Z), np.max(Z))
 ax.zaxis.set_major_locator(LinearLocator(10))
 ax.set_title('Guided mode field distribution \n effective permittivity = ' + str(eff_eps[mode_ind]))
-ax.set_xlabel('x/µm')
-ax.set_ylabel('y/µm')
-ax.set_zlabel('Electric field strength [V/µm]')
+ax.set_xlabel('x [µm]', fontsize=10)
+ax.set_ylabel('y [µm]', fontsize=10)
+ax.set_zlabel('Electric field strength [V/µm]', fontsize=10)
+Z_formatter = FormatStrFormatter('%.3f')
+ax.zaxis.set_major_formatter(Z_formatter)
 ## Add a color bar which maps values to colors.
 fig.colorbar(surf, shrink=0.5, aspect=5)
+plt.show()
+
+# Plot the eigenmode(2d plot)
+X, Y = XX, YY
+Z = np.real(guided[mode_ind].reshape((number_points , number_points + 2)))
+fig, ax = plt.subplots(figsize=(6,8))
+im = ax.imshow(Z, cmap='coolwarm', extent=[-grid_size/2 - h , grid_size/2 + h, -grid_size/2, grid_size/2])
+fig.colorbar(im, ax=ax, label='Electric field strength [V/µm]')
+ax.set_title('Guided mode field distribution \n effective permittivity = ' + str(eff_eps[mode_ind]))
+ax.set_xlabel('x/µm')
+ax.set_ylabel('y/µm')
 plt.show()
