@@ -127,8 +127,8 @@ plt.title("Epsilon as a function of N")
 plt.show()
 
 plt.figure(figsize=(5,5)) #plot
-plt.plot(time_operation, eff_eps_calculated)
-plt.xlabel("Time used for calculation in seconds")
-plt.ylabel("Epsilon")
-plt.title("Epsilon as a function of N")
+plt.plot(n_count, time_operation)
+plt.xlabel("Number of points used for calculation")
+plt.ylabel("Time used for calculation in seconds")
+plt.title("Operation time as a function of N")
 plt.show()
