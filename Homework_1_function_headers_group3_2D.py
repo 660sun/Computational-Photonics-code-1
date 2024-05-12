@@ -73,7 +73,7 @@ print('The operational time of the program is %s seconds' %(end_time-start_time)
 
 mode_ind = int(1)
 print('selected_eff_eps: ', selected_eff_eps[mode_ind])
-print('selected_guided: ', selected_guided[mode_ind])
+print('selected_guided: \n', selected_guided[mode_ind])
 
 # Plot the eigenvalues and eigenvectors
 x = xx
