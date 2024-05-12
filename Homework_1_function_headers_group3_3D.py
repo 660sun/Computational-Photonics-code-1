@@ -153,7 +153,7 @@ for i in range(40):
     prm           = e_substrate + delta_e * np.exp(-(XX**2+YY**2)/w**2)
     # Compute the eigenvalues and eigenvectors
     eff_eps = guided_modes_2D(prm, k0, h, numb)[0]
-    epsilon_calculated.append(eff_eps)
+    epsilon_calculated.append(np.real(eff_eps))
     n_count.append(number_points)
     time_operation.append(time.time() - start_time)
 
