@@ -109,23 +109,23 @@ mode_ind = 0
 print(eff_eps)
 # print(guided)
 
-# Plot the eigenmode(3d plot)
-X, Y = XX, YY
-Z = np.real(guided[mode_ind].reshape((number_points , number_points + 2)))
-fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(8,6))
-surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-## Customize the z axis.
-ax.set_zlim(np.min(Z), np.max(Z))
-ax.zaxis.set_major_locator(LinearLocator(10))
-ax.set_title('Guided mode field distribution \n effective permittivity = ' + str(eff_eps[mode_ind]))
-ax.set_xlabel('x [µm]', fontsize=10)
-ax.set_ylabel('y [µm]', fontsize=10)
-ax.set_zlabel('Electric field strength [V/µm]', fontsize=10)
-Z_formatter = FormatStrFormatter('%.3f')
-ax.zaxis.set_major_formatter(Z_formatter)
-## Add a color bar which maps values to colors.
-fig.colorbar(surf, shrink=0.5, aspect=5)
-plt.show()
+# # Plot the eigenmode(3d plot)
+# X, Y = XX, YY
+# Z = np.real(guided[mode_ind].reshape((number_points , number_points + 2)))
+# fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(8,6))
+# surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+# ## Customize the z axis.
+# ax.set_zlim(np.min(Z), np.max(Z))
+# ax.zaxis.set_major_locator(LinearLocator(10))
+# ax.set_title('Guided mode field distribution \n effective permittivity = ' + str(eff_eps[mode_ind]))
+# ax.set_xlabel('x [µm]', fontsize=10)
+# ax.set_ylabel('y [µm]', fontsize=10)
+# ax.set_zlabel('Electric field strength [V/µm]', fontsize=10)
+# Z_formatter = FormatStrFormatter('%.3f')
+# ax.zaxis.set_major_formatter(Z_formatter)
+# ## Add a color bar which maps values to colors.
+# fig.colorbar(surf, shrink=0.5, aspect=5)
+# plt.show()
 
 # Plot the eigenmode(2d plot)
 X, Y = XX, YY
@@ -136,4 +136,38 @@ fig.colorbar(im, ax=ax, label='Electric field strength [V/µm]')
 ax.set_title('Guided mode field distribution \n effective permittivity = ' + str(eff_eps[mode_ind]))
 ax.set_xlabel('x/µm')
 ax.set_ylabel('y/µm')
+plt.show()
+
+# Convergence and time analysis
+n_count = []
+time_operation = []
+epsilon_calculated = []
+#define params variable
+for i in range(40):
+    start_time = time.time()
+    number_points = 101 + 5*i
+    h             = grid_size/(number_points - 1)
+    xx            = np.linspace(-grid_size/2 - h,grid_size/2 + h,number_points + 2)
+    yy            = np.linspace(-grid_size/2,grid_size/2,number_points)
+    XX,YY         = np.meshgrid(xx,yy)
+    prm           = e_substrate + delta_e * np.exp(-(XX**2+YY**2)/w**2)
+    # Compute the eigenvalues and eigenvectors
+    eff_eps = guided_modes_2D(prm, k0, h, numb)[0]
+    epsilon_calculated.append(eff_eps)
+    n_count.append(number_points)
+    time_operation.append(time.time() - start_time)
+
+
+plt.figure(figsize=(5,5)) #plot
+plt.plot(n_count, epsilon_calculated)
+plt.xlabel("Number of points used for calculation")
+plt.ylabel("Epsilon")
+plt.title("Epsilon as a function of N")
+plt.show()
+
+plt.figure(figsize=(5,5)) #plot
+plt.plot(time_operation, epsilon_calculated)
+plt.xlabel("Time used for calculation in seconds")
+plt.ylabel("Epsilon")
+plt.title("Epsilon as a function of N")
 plt.show()

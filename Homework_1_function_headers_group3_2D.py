@@ -98,3 +98,37 @@ ax2.tick_params(axis='y', labelcolor=color)
 fig.tight_layout()
 plt.title('Guided mode field distribution \n effective permittivity = ' + str(selected_eff_eps[mode_ind]))
 plt.show()
+
+# Convergence and time analysis
+n_count = []
+time_operation = []
+mean_eff_eps_calculated = []
+import time
+#define params variable
+for i in range(40):
+    start_time = time.time()
+    number_points = 101 + 5*i
+    h             = grid_size/(number_points - 1)
+    xx            = np.linspace(-grid_size/2, grid_size/2 ,number_points)
+    prm           = e_substrate + delta_e * np.exp(-(xx/w)**2)
+    # Compute the eigenvalues and eigenvectors
+    eff_eps = guided_modes_1DTE(prm, k0, h)[0]
+    # mean_eff_eps = np.mean(eff_eps)
+    mean_eff_eps_calculated.append(eff_eps[0])
+    n_count.append(number_points)
+    time_operation.append(time.time() - start_time)
+
+
+plt.figure(figsize=(5,5)) #plot
+plt.plot(n_count,mean_eff_eps_calculated)
+plt.xlabel("Number of points used for calculation")
+plt.ylabel("Epsilon")
+plt.title("Epsilon as a function of N")
+plt.show()
+
+plt.figure(figsize=(5,5)) #plot
+plt.plot(time_operation, mean_eff_eps_calculated)
+plt.xlabel("Time used for calculation in seconds")
+plt.ylabel("Epsilon")
+plt.title("Epsilon as a function of N")
+plt.show()
