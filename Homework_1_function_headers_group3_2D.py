@@ -30,6 +30,7 @@ def guided_modes_1DTE(prm, k0, h):
         Field distributions of the guided eigenmodes
     """
     dt = np.common_type(np.array([prm]))
+    # Construct the matrix M for the eigenvalue problem
     M  = np.zeros((len(prm),len(prm)), dtype = dt)
     for i in range(len(prm)):
         M[i][i] =  -2/(h**2) + (k0**2) * prm[i]
@@ -38,10 +39,11 @@ def guided_modes_1DTE(prm, k0, h):
         if i < len(prm) - 1:
             M[i][i+1] = 1/(h**2)
     M  = (1/(k0**2)) * M
+    # Compute the eigenvalues and eigenvectors
     eff_eps, guided = np.linalg.eig(M)
     return eff_eps, guided
 
-# Define the parameters
+# Define the basic parameters and the grids
 grid_size     = 120
 number_points = 601
 h             = grid_size/(number_points - 1)
@@ -63,19 +65,20 @@ indices = np.where((eff_eps >= e_substrate) & (eff_eps <= e_substrate + delta_e)
 ## Extract the eigenvalues and eigenvectors within the range
 selected_eff_eps = eff_eps[indices]
 selected_guided = (np.transpose(guided))[indices]
-# mode_ind = int(1)
-# print('selected_eff_eps: ', selected_eff_eps[mode_ind])
-# print('selected_guided: ', selected_guided[mode_ind])
 
 # Calculate the operational time of the program (finding the eigenvalues and eigenvectors)
 end_time=time.perf_counter()
 print('The operational time of the program is %s seconds' %(end_time-start_time))
 
-mode_ind = int(1)
-print('selected_eff_eps: ', selected_eff_eps[mode_ind])
-print('selected_guided: \n', selected_guided[mode_ind])
+print('There are ', len(selected_eff_eps), ' modes within the given range.')
+mode_ind = int(input('Please input an integer:'))
+if mode_ind >= 0 & mode_ind < len(selected_eff_eps):
+    print('selected_eff_eps: ', selected_eff_eps[mode_ind])
+    print('selected_guided: \n', selected_guided[mode_ind])
+if mode_ind >= len(selected_eff_eps) | mode_ind < 0:
+    print('The input number is out of range. Please input a positive number less than ', len(selected_eff_eps))
 
-# Plot the eigenvalues and eigenvectors
+# Plot the field distribution of the selected mode and the permittivity
 x = xx
 y1 = selected_guided[mode_ind]
 y2 = prm
@@ -104,7 +107,7 @@ n_count = []
 time_operation = []
 eff_eps_calculated = []
 
-#define params variable
+# Define params variable
 for i in range(40):
     start_time = time.time()
     number_points = 101 + 5*i
@@ -118,15 +121,16 @@ for i in range(40):
     n_count.append(number_points)
     time_operation.append(time.time() - start_time)
 
-
-plt.figure(figsize=(5,5)) #plot
+# Plot convergence of the effective permittivity with increasing number of points
+plt.figure(figsize=(5,5)) 
 plt.plot(n_count, eff_eps_calculated)
 plt.xlabel("Number of points used for calculation")
 plt.ylabel("Epsilon")
 plt.title("Epsilon as a function of N")
 plt.show()
 
-plt.figure(figsize=(5,5)) #plot
+# Plot the operational time with increasing number of points
+plt.figure(figsize=(5,5)) 
 plt.plot(n_count, time_operation)
 plt.xlabel("Number of points used for calculation")
 plt.ylabel("Time used for calculation in seconds")
