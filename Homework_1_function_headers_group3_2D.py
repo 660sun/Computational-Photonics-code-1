@@ -71,7 +71,7 @@ end_time=time.perf_counter()
 print('The operational time of the program is %s seconds' %(end_time-start_time))
 
 print('There are ', len(selected_eff_eps), ' modes within the given range.')
-mode_ind = int(input('Please input an integer:'))
+mode_ind = int(input('Please input the order of the mode you want to plot:'))
 if mode_ind >= 0 & mode_ind < len(selected_eff_eps):
     print('selected_eff_eps: ', selected_eff_eps[mode_ind])
     print('selected_guided: \n', selected_guided[mode_ind])

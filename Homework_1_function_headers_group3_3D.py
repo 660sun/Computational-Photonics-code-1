@@ -94,7 +94,7 @@ print('The operational time of the program is %s seconds' %(end_time-start_time)
 
 print('There are ', numb, ' modes computed.')
 print('The effective permittivity of the modes are: \n', eff_eps)
-mode_ind = int(input('Please input an integer:'))
+mode_ind = int(input('Please input the order of the mode you want to plot:'))
 if mode_ind >= 0 & mode_ind < numb:
     print('selected_eff_eps: ', eff_eps[mode_ind])
     print('selected_guided: \n', guided[mode_ind])
