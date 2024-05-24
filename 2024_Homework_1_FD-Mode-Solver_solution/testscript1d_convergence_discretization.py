@@ -64,7 +64,7 @@ x = np.log10(h[:-1])
 for i in range(0, coefficients.shape[0], 2):
     label = "mode %d, k = %1.2f" % (i+1, coefficients[i, 0])
     ax.plot(h[:-1], rel_error[:, i], '.--', label=label)
-    y = 10**np.polyval(coefficients[i, :], x)
+    y = np.polyval(coefficients[i, :], h[:-1])
     ax.plot(h[:-1], y, ls="-", c=colors[i % len(colors)])
 ax.legend(loc="best")
 ax.set_xscale("log")
